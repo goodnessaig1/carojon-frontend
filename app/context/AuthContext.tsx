@@ -5,6 +5,7 @@ import React, {
   useState,
   ReactNode,
   FC,
+  useEffect,
 } from "react";
 import { ApolloError, ApolloQueryResult, useQuery } from "@apollo/client";
 import { GET_ORDERS_BY_USER } from "../graphpl/queries";
@@ -48,20 +49,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 // AuthProvider component to wrap around the app
 export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
   // const [user, setUser] = useState<User | null>(null);
-  const [user, setUser] = useState<User | null>(() => {
-    const storedUserData = localStorage.getItem("user");
-
-    if (storedUserData && storedUserData !== "undefined") {
-      try {
-        const data = JSON.parse(storedUserData);
-        return data?.user;
-      } catch (error) {
-        console.error("Failed to parse JSON:", error);
-        return null; // Fallback to null in case of JSON parse failure
-      }
-    }
-    return null;
-  });
+  const [user, setUser] = useState<User | null>(null);
 
   const userId = user?.id;
   const {
@@ -73,6 +61,20 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
     variables: { userId: userId ? parseInt(userId) : undefined },
     skip: !userId,
   });
+
+  useEffect(() => {
+    const storedUserData = localStorage.getItem("user");
+
+    if (storedUserData && storedUserData !== "undefined") {
+      try {
+        const data = JSON.parse(storedUserData);
+        setUser(data?.user);
+      } catch (error) {
+        console.error("Failed to parse JSON:", error);
+        setUser(null);
+      }
+    }
+  }, []);
 
   return (
     <AuthContext.Provider
