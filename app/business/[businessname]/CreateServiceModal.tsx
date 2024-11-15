@@ -41,6 +41,9 @@ export const CreateServiceModal = ({
           input,
         },
       });
+      if (handleClose) {
+        handleClose();
+      }
       toast.success("Successfully created");
       console.log(" Service created successfully", create);
     } catch (error) {
