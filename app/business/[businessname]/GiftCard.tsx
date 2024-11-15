@@ -21,8 +21,11 @@ interface GiftCardProps {
   giftcard: GiftCard;
   index: number;
   client: boolean;
+  // setGiftcardData?: React.Dispatch<
+  //   React.SetStateAction<GiftCard | Record<string, any>>
+  // >;
   setGiftcardData?: React.Dispatch<
-    React.SetStateAction<GiftCard | Record<string, any>>
+    React.SetStateAction<GiftCard | Record<string, never>>
   >;
   handleOpen?: () => void;
   handleDeactivate?: HandleDeactivateType;

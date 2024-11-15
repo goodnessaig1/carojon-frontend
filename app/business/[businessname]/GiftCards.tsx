@@ -10,7 +10,10 @@ interface Props {
 }
 
 const GiftCards = ({ businessId }: Props) => {
-  const [giftcardData, setGiftcardData] = useState<GiftCard | {}>({});
+  // const [giftcardData, setGiftcardData] = useState<GiftCard | {}>({});
+  const [giftcardData, setGiftcardData] = useState<
+    GiftCard | Record<string, never>
+  >({});
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => setOpen(true);
@@ -21,7 +24,10 @@ const GiftCards = ({ businessId }: Props) => {
     },
     skip: !businessId,
   });
-  let giftcards: GiftCard[] = data?.getGiftCardsByBusinessId;
+  const giftcards: GiftCard[] = data?.getGiftCardsByBusinessId;
+  const handleRefetch = () => {
+    refetch();
+  };
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
@@ -34,7 +40,7 @@ const GiftCards = ({ businessId }: Props) => {
         handleClose={handleClose}
         businessId={businessId}
         giftcard={giftcardData}
-        refetch={refetch}
+        handleRefetch={handleRefetch}
       />
       {giftcards?.length > 0 ? (
         <Grid container spacing={2}>

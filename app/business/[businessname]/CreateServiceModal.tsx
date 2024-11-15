@@ -43,7 +43,7 @@ export const CreateServiceModal = ({
       });
       toast.success("Successfully created");
       console.log(" Service created successfully", create);
-    } catch (error: any) {
+    } catch (error) {
       if (error instanceof ApolloError) {
         const message = error.message;
         toast.error(message);

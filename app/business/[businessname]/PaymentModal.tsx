@@ -5,6 +5,7 @@ import Image from "next/image";
 import { toast } from "react-toastify";
 import { ThreeDots } from "react-loader-spinner";
 import { useAuth } from "@/app/context/AuthContext";
+import { GiftCard } from "./GiftCard";
 
 const style = {
   position: "absolute",
@@ -17,14 +18,28 @@ const style = {
   p: 2,
   borderRadius: 2,
 };
-export const PaymentModal = ({ open, handleClose, giftcard, refetch }: any) => {
+
+interface Props {
+  handleClose?: () => void;
+  handleRefetch?: () => void;
+  open: boolean;
+  giftcard: GiftCard | Record<string, never>;
+  businessId: string;
+}
+
+export const PaymentModal = ({
+  open,
+  handleClose,
+  giftcard,
+  handleRefetch,
+}: Props) => {
   const { user, refetchOrder } = useAuth();
   let userId = user?.id;
   let giftCardId = giftcard?.id;
 
   const [createPayment, { loading }] = useMutation(CREATE_PAYMENT);
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const input = {
       userId: userId ? parseInt(userId) : undefined,
@@ -36,18 +51,23 @@ export const PaymentModal = ({ open, handleClose, giftcard, refetch }: any) => {
           input,
         },
       });
-      refetch();
-      refetchOrder();
-      handleClose();
-      toast.success("Successfully purchased giftcard");
-    } catch (error: any) {
-      const message = error.message;
-      if (error instanceof ApolloError) {
-      } else {
-        console.log(message);
+      if (handleRefetch) {
+        handleRefetch();
       }
-      toast.error(message);
-      console.error("Error creating gift card:", message);
+      if (handleClose) {
+        handleClose();
+      }
+      refetchOrder();
+
+      toast.success("Successfully purchased giftcard");
+    } catch (error) {
+      if (error instanceof ApolloError) {
+        const message = error.message;
+        console.log(message);
+        toast.error(message);
+      } else {
+        console.error("Error creating gift card:");
+      }
     }
   };
 
