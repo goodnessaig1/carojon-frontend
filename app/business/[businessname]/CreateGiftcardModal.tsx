@@ -28,10 +28,21 @@ const style = {
   p: 2,
   borderRadius: 2,
 };
-export const CreateGiftCardModal = ({ open, handleClose, businessId }: any) => {
+
+export interface CreateProps {
+  handleClose?: () => void;
+  open: boolean;
+  businessId: string;
+}
+
+export const CreateGiftCardModal = ({
+  open,
+  handleClose,
+  businessId,
+}: CreateProps) => {
   const [title, setTitle] = useState("");
   const [amount, setAmount] = useState("");
-  const [image, setImage] = useState(null);
+  const [image, setImage] = useState<string | null>(null);
   const [uploadImgLoading, setUploadImgLoading] = useState(false);
 
   const [createGiftCard, { loading }] = useMutation(CREATE_GIFT_CARD, {
@@ -57,7 +68,7 @@ export const CreateGiftCardModal = ({ open, handleClose, businessId }: any) => {
     },
   });
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const input = {
       title,
@@ -71,22 +82,27 @@ export const CreateGiftCardModal = ({ open, handleClose, businessId }: any) => {
           input,
         },
       });
-      handleClose();
+      if (handleClose) {
+        handleClose();
+      }
       toast.success("Successfully created");
-    } catch (error: any) {
-      const message = error.message;
+    } catch (error) {
       if (error instanceof ApolloError) {
-        console.log(message);
-      } else {
+        const message = error.message;
+        toast.error(message);
+      } else if (error instanceof Error) {
         const message = error.message;
         console.log(message);
+        toast.error(message);
+      } else {
+        console.error("An unknown error occurred:", error);
+        toast.error("An unknown error occurred.");
       }
-      toast.error(message);
       console.error("Error creating gift card:", error);
     }
   };
 
-  const onDrop = (acceptedFiles: any) => {
+  const onDrop = (acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
     if (file && file.type.startsWith("image/")) {
       uploadImage(file);
@@ -99,7 +115,7 @@ export const CreateGiftCardModal = ({ open, handleClose, businessId }: any) => {
     maxFiles: 1,
   });
 
-  const uploadImage = async (file: any) => {
+  const uploadImage = async (file: File) => {
     const formData = new FormData();
     formData.append("image", file);
     try {

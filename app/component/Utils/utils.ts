@@ -1,4 +1,14 @@
-export const uploadFile = async (formData: any, setLoading: any) => {
+// export const uploadFile = async (formData: any, setLoading: any) => {
+import { Dispatch, SetStateAction } from "react";
+
+interface UploadResponse {
+  result: string; // or any other fields returned from the server
+}
+
+export const uploadFile = async (
+  formData: FormData,
+  setLoading: Dispatch<SetStateAction<boolean>>,
+): Promise<UploadResponse> => {
   const url = `${process.env.NEXT_PUBLIC_BACKEND_URL}/images/upload`;
   setLoading(true);
   const config = {

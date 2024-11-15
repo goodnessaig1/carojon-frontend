@@ -1,4 +1,3 @@
-import { useAuth } from "@/app/context/AuthContext";
 import { HandleDeactivateType } from "@/app/my-business/MyBusiness";
 import {
   Box,
@@ -11,7 +10,7 @@ import {
 import React from "react";
 
 export interface GiftCard {
-  id: number;
+  id: string;
   title: string;
   amount: number;
   image: string;

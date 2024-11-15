@@ -25,7 +25,7 @@ const SignIn = () => {
   const [emailError, setEmailError] = useState<string | null>(null);
   const [passwordError, setPasswordError] = useState<string | null>(null);
 
-  const submitHandle = async (e: any) => {
+  const submitHandle = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       const response = await loginUser({
@@ -40,19 +40,19 @@ const SignIn = () => {
       localStorage.setItem("user", JSON.stringify(data));
       setUser(data);
       router.push("/dashboard");
-    } catch (error: any) {
-      const message = error.message;
+    } catch (error) {
       if (error instanceof ApolloError) {
+        const message = error.message;
         if (message.includes("User does not exist")) {
           setEmailError(message);
         }
         if (message.includes("Incorrect password")) {
           setPasswordError(message);
         }
-      } else {
         console.log(message);
+      } else {
+        toast.error("An error occured");
       }
-      toast.error(message);
     }
   };
 

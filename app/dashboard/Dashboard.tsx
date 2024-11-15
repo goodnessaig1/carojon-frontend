@@ -16,6 +16,15 @@ import Unavailable from "../../app/assets/unavailable.jpeg";
 import Link from "next/link";
 import LoadingPage from "../component/Utils/Loading";
 
+interface BusinessManager {
+  id: string;
+  fullname: string;
+  business: {
+    name: string;
+    description: string;
+  };
+}
+
 const Dashboard = () => {
   const { data, loading } = useQuery(GET_USERS_WITH_BUSINESS_DETAILS);
   return (
@@ -60,7 +69,7 @@ const Dashboard = () => {
                   sx={{ width: "100%" }}
                 >
                   {data &&
-                    data?.getBusinessManagers.map((item: any) => (
+                    data?.getBusinessManagers.map((item: BusinessManager) => (
                       <Grid
                         item
                         xs={12}

@@ -4,6 +4,7 @@ import { Box, Button, Modal, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { ThreeDots } from "react-loader-spinner";
+import { CreateProps } from "./CreateGiftcardModal";
 
 const style = {
   position: "absolute",
@@ -16,13 +17,17 @@ const style = {
   p: 2,
   borderRadius: 2,
 };
-export const CreateServiceModal = ({ open, handleClose, businessId }: any) => {
+export const CreateServiceModal = ({
+  open,
+  handleClose,
+  businessId,
+}: CreateProps) => {
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [description, setDescription] = useState("");
   const [createService, { loading }] = useMutation(CREATE_SERVICE);
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const input = {
       price: price ? parseInt(price) : undefined,
@@ -39,15 +44,17 @@ export const CreateServiceModal = ({ open, handleClose, businessId }: any) => {
       toast.success("Successfully created");
       console.log(" Service created successfully", create);
     } catch (error: any) {
-      const message = error.message;
       if (error instanceof ApolloError) {
-        console.log(message);
-      } else {
+        const message = error.message;
+        toast.error(message);
+      } else if (error instanceof Error) {
         const message = error.message;
         console.log(message);
+        toast.error(message);
+      } else {
+        console.error("An unknown error occurred:", error);
+        toast.error("An unknown error occurred.");
       }
-      toast.error(message);
-      console.error("Error creating gift card:", error);
     }
   };
 

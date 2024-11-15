@@ -19,7 +19,7 @@ import { CreateGiftCardModal } from "../business/[businessname]/CreateGiftcardMo
 import { CreateServiceModal } from "../business/[businessname]/CreateServiceModal";
 import { DEACTIVATE_GIFT_CARD } from "../graphpl/mutations";
 import { HiOutlineDotsVertical } from "react-icons/hi";
-export type HandleDeactivateType = (giftCardId: any) => Promise<void>;
+export type HandleDeactivateType = (giftCardId: string) => Promise<void>;
 
 const style = {
   position: "absolute",
@@ -38,7 +38,7 @@ const MyBusiness = () => {
   const [isActive, setIsActive] = useState("active");
   const [openCreateGiftcard, setOpenCreateGiftcard] = useState(false);
   const [openCreateService, setOpenCreateService] = useState(false);
-  const [giftcardData, setGiftcardData] = useState<GiftCard | {}>({});
+  // const [giftcardData, setGiftcardData] = useState<GiftCard | {}>({});
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => setOpen(true);
@@ -48,14 +48,14 @@ const MyBusiness = () => {
 
   const closeCreateService = () => setOpenCreateService(false);
 
-  let userId = user?.id;
+  const userId = user?.id;
 
   const { data, error, loading } = useQuery(GET_USER_WITH_BUSINESS, {
     variables: { userId: userId ? parseInt(userId) : undefined },
     skip: !userId,
   });
 
-  let businessId = data?.userWithBusiness?.business?.id;
+  const businessId = data?.userWithBusiness?.business?.id;
 
   const handleOpenCreateGiftcard = () => {
     if (businessId) {
@@ -83,14 +83,14 @@ const MyBusiness = () => {
 
   const activeGiftCards: GiftCard[] =
     giftcardsData?.getGiftCardsByBusinessId.filter(
-      (card: any) => card.isActive,
+      (card: GiftCard) => card.isActive,
     ) || [];
   const deactivatedGiftCards: GiftCard[] =
     giftcardsData?.getGiftCardsByBusinessId.filter(
-      (card: any) => !card.isActive,
+      (card: GiftCard) => !card.isActive,
     ) || [];
 
-  let giftcards: GiftCard[] = giftcardsData?.getGiftCardsByBusinessId;
+  const giftcards: GiftCard[] = giftcardsData?.getGiftCardsByBusinessId;
 
   const [deactivateGiftCard, { loading: isDeactivating }] =
     useMutation(DEACTIVATE_GIFT_CARD);
@@ -303,7 +303,7 @@ const MyBusiness = () => {
                                     userId === data?.userWithBusiness?.id
                                   }
                                   isDeactivating={isDeactivating}
-                                  setGiftcardData={setGiftcardData}
+                                  // setGiftcardData={setGiftcardData}
                                   handleDeactivate={handleDeactivate}
                                 />
                               </Grid>
@@ -344,7 +344,7 @@ const MyBusiness = () => {
                                   giftcard={giftcard}
                                   index={index}
                                   client={false}
-                                  setGiftcardData={setGiftcardData}
+                                  // setGiftcardData={setGiftcardData}
                                   isOwner={
                                     userId === data?.userWithBusiness?.id
                                   }

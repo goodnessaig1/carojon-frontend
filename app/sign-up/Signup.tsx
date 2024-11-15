@@ -20,11 +20,15 @@ import { ThreeDots } from "react-loader-spinner";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
+interface FormData {
+  [key: string]: string;
+}
+
 const SignUp = () => {
   const router = useRouter();
   const [userType, setUserType] = useState("client");
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     email: "",
     password: "",
     fullname: "",
@@ -33,7 +37,18 @@ const SignUp = () => {
   });
 
   const [emailError, setEmailError] = useState<string | null>(null);
-  const handleChange = (e: any) => {
+
+  // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const { name, value } = e.target;
+  //   setFormData(prevData => ({
+  //     ...prevData,
+  //     [name]: value,
+  //   }));
+  // };
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     const { name, value } = e.target;
     setFormData(prevData => ({
       ...prevData,
@@ -41,10 +56,13 @@ const SignUp = () => {
     }));
   };
 
-  const handleUserTypeChange = (e: any) => {
+  const handleUserTypeChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
     setUserType(e.target.value);
+
     if (e.target.value === "client") {
-      setFormData(prevData => ({
+      setFormData((prevData: Record<string, string>) => ({
         ...prevData,
         businessName: "",
         businessDescription: "",
@@ -54,7 +72,7 @@ const SignUp = () => {
 
   const [createUser, { loading }] = useMutation(CREATE_USER);
 
-  const submitHandle = async (e: any) => {
+  const submitHandle = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       await createUser({
@@ -75,16 +93,16 @@ const SignUp = () => {
       });
       router.push("/sign-in");
       toast.success("Account created successfully");
-    } catch (error: any) {
-      const message = error.message;
+    } catch (error) {
       if (error instanceof ApolloError) {
+        const message = error.message;
         if (message.includes("Email already exists")) {
           setEmailError(message);
         }
       } else {
         console.log(error);
+        toast.error("an error occured");
       }
-      toast.error(message);
     }
   };
   return (

@@ -7,50 +7,23 @@ import { useQuery } from "@apollo/client";
 import { Box, Button, Container, Typography } from "@mui/material";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import { HiOutlineDotsVertical } from "react-icons/hi";
-import { Modal } from "@mui/material";
-import { CreateGiftCardModal } from "../CreateGiftcardModal";
-import { CreateServiceModal } from "../CreateServiceModal";
 import Services from "../Services";
 import GiftCards from "../GiftCards";
-import { useAuth } from "@/app/context/AuthContext";
 
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 300,
-  bgcolor: "background.paper",
-  boxShadow: 24,
-  p: 2,
-  borderRadius: 2,
-};
+interface Props {
+  userId: string;
+}
 
-const BusinessPage = ({ userId }: any) => {
+const BusinessPage = ({ userId }: Props) => {
   const [loading, setLoading] = useState(true);
-  const { user } = useAuth();
   const [isActive, setIsActive] = useState("giftcard");
-  const [open, setOpen] = useState(false);
-  const [openCreateGiftcard, setOpenCreateGiftcard] = useState(false);
-  const [openCreateService, setOpenCreateService] = useState(false);
-
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-
-  const handleOpenCreateGiftcard = () => setOpenCreateGiftcard(true);
-  const closeCreateGiftcard = () => setOpenCreateGiftcard(false);
-
-  const handleOpenCreateService = () => setOpenCreateService(true);
-  const closeCreateService = () => setOpenCreateService(false);
 
   const { data, loading: queryLoading } = useQuery(GET_USER_WITH_BUSINESS, {
     variables: { userId: userId ? parseInt(userId) : undefined },
     skip: !userId,
   });
 
-  let userDetails = data?.userWithBusiness;
-  let businessId = data?.userWithBusiness?.business?.id;
+  const userDetails = data?.userWithBusiness;
 
   useEffect(() => {
     if (!queryLoading) {
@@ -199,75 +172,6 @@ const BusinessPage = ({ userId }: any) => {
               <GiftCards businessId={userDetails?.business?.id} />
             )}
           </Box>
-          {/* {user?.id === userId && (
-            <Box>
-              <Box
-                sx={{
-                  "&:hover": {
-                    cursor: "pointer",
-                    transition: "ease-in",
-                    transitionDuration: "200",
-                  },
-                }}
-                onClick={handleOpen}
-              >
-                <HiOutlineDotsVertical size={26} />
-              </Box>
-              <CreateGiftCardModal
-                open={openCreateGiftcard}
-                handleClose={closeCreateGiftcard}
-                businessId={userDetails?.business?.id}
-              />
-
-              <CreateServiceModal
-                open={openCreateService}
-                handleClose={closeCreateService}
-                businessId={userDetails?.business?.id}
-              />
-              <Modal open={open} onClose={handleClose}>
-                <Box sx={style}>
-                  <Box
-                    sx={{
-                      transition: "background-color 0.3s ease",
-                      "&:hover": {
-                        backgroundColor: "blue",
-                        color: "white",
-                        cursor: "pointer",
-                        transition: "ease-in",
-                        transitionDuration: "200ms",
-                      },
-                      p: 2,
-                      borderRadius: 1,
-                    }}
-                    onClick={handleOpenCreateGiftcard}
-                  >
-                    <Typography variant="h6" component="h2" gutterBottom>
-                      Add Giftcard
-                    </Typography>
-                  </Box>
-                  <Box
-                    sx={{
-                      transition: "background-color 0.3s ease",
-                      "&:hover": {
-                        backgroundColor: "blue",
-                        color: "white",
-                        cursor: "pointer",
-                        transition: "ease-in",
-                        transitionDuration: "200ms",
-                      },
-                      p: 2,
-                      borderRadius: 1,
-                    }}
-                    onClick={handleOpenCreateService}
-                  >
-                    <Typography variant="h6" component="h2" gutterBottom>
-                      Add Service
-                    </Typography>
-                  </Box>
-                </Box>
-              </Modal>
-            </Box>
-          )} */}
         </Container>
       ) : (
         <LoadingPage />

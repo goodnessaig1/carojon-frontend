@@ -9,7 +9,6 @@ import React, {
 import { ApolloError, ApolloQueryResult, useQuery } from "@apollo/client";
 import { GET_ORDERS_BY_USER } from "../graphpl/queries";
 
-// Define the User type
 interface User {
   email: string;
   fullname: string;
@@ -54,7 +53,7 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
 
     if (storedUserData && storedUserData !== "undefined") {
       try {
-        let data = JSON.parse(storedUserData);
+        const data = JSON.parse(storedUserData);
         return data?.user;
       } catch (error) {
         console.error("Failed to parse JSON:", error);
@@ -64,7 +63,7 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
     return null;
   });
 
-  let userId = user?.id;
+  const userId = user?.id;
   const {
     loading: loadingOrders,
     error: ordersError,

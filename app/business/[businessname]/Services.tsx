@@ -21,7 +21,7 @@ const Services = ({ businessId }: Props) => {
     },
     skip: !businessId,
   });
-  let services: Service[] = data?.getServicesByBusinessId;
+  const services: Service[] = data?.getServicesByBusinessId;
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
   return (
