@@ -16,6 +16,11 @@ import { toast } from "react-toastify";
 import { IoMdClose } from "react-icons/io";
 import { Oval, ThreeDots } from "react-loader-spinner";
 import { GET_GIFT_CARDS_BY_BUSINESS_ID } from "@/app/graphpl/queries";
+import { GiftCard } from "./GiftCard";
+
+type GetGiftCardsByBusinessIdQuery = {
+  getGiftCardsByBusinessId: GiftCard[];
+};
 
 const style = {
   position: "absolute",
@@ -47,13 +52,13 @@ export const CreateGiftCardModal = ({
 
   const [createGiftCard, { loading }] = useMutation(CREATE_GIFT_CARD, {
     update(cache, { data: { createGiftCard } }) {
-      const existingData: any = cache.readQuery({
+      const existingData = cache.readQuery<GetGiftCardsByBusinessIdQuery>({
         query: GET_GIFT_CARDS_BY_BUSINESS_ID,
         variables: { businessId: parseInt(businessId) },
       });
 
-      // This is where adds the new giftcard to the previous giftcards array
-      if (createGiftCard) {
+      // Safely update the cache if existingData is not null
+      if (createGiftCard && existingData) {
         cache.writeQuery({
           query: GET_GIFT_CARDS_BY_BUSINESS_ID,
           variables: { businessId: parseInt(businessId) },

@@ -34,8 +34,8 @@ export const PaymentModal = ({
   handleRefetch,
 }: Props) => {
   const { user, refetchOrder } = useAuth();
-  let userId = user?.id;
-  let giftCardId = giftcard?.id;
+  const userId = user?.id;
+  const giftCardId = giftcard?.id;
 
   const [createPayment, { loading }] = useMutation(CREATE_PAYMENT);
 
