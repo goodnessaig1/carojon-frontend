@@ -1,11 +1,15 @@
 "use client";
 import { ApolloProvider } from "@apollo/client";
-import React from "react";
+import React, { ReactNode } from "react";
 import apolloClient from "./lib/apollioClient";
 import { ToastContainer } from "react-toastify";
 import { AuthProvider } from "./context/AuthContext";
 
-const AppContainer = ({ children }: any) => {
+interface AppContainerProps {
+  children: ReactNode;
+}
+
+const AppContainer = ({ children }: AppContainerProps) => {
   return (
     <ApolloProvider client={apolloClient}>
       <AuthProvider>
