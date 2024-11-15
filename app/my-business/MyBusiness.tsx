@@ -50,7 +50,7 @@ const MyBusiness = () => {
 
   const userId = user?.id;
 
-  const { data, error, loading } = useQuery(GET_USER_WITH_BUSINESS, {
+  const { data, loading } = useQuery(GET_USER_WITH_BUSINESS, {
     variables: { userId: userId ? parseInt(userId) : undefined },
     skip: !userId,
   });

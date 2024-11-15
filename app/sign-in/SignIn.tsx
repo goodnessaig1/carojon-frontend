@@ -16,12 +16,14 @@ import { useAuth } from "../context/AuthContext";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
+const text = "Don't have an account ? Sign up";
+
 const SignIn = () => {
   const { setUser } = useAuth();
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loginUser, { data, loading }] = useMutation(LOGIN_USER);
+  const [loginUser, { loading }] = useMutation(LOGIN_USER);
   const [emailError, setEmailError] = useState<string | null>(null);
   const [passwordError, setPasswordError] = useState<string | null>(null);
 
@@ -178,7 +180,7 @@ const SignIn = () => {
           <Box>
             <Typography fontWeight={300} mt={2}>
               <Link href="sign-up" underline="hover" sx={{ color: "#fff" }}>
-                Don't have an account ? Sign up
+                {text}
               </Link>
             </Typography>
           </Box>

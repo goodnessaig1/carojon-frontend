@@ -3,10 +3,10 @@ import React from "react";
 import BusinessPage from "./BusinessPage";
 import { useParams } from "next/navigation";
 
-const page: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
+const Page: React.FC = () => {
+  const { id } = useParams() as { id: string };
 
   return <BusinessPage userId={id} />;
 };
 
-export default page;
+export default Page;
